@@ -1,0 +1,155 @@
+# First Week Homework
+
+
+
+
+"""Question 1:
+What's the version of Pandas that you installed?"""
+
+import pandas as pd
+print(pd.__version__)
+
+"""Answer: my pandas version is 2.1.0"""
+
+
+
+
+
+"""Question 2.
+How many columns are in the dataset?"""
+
+import pandas as pd
+df = pd.read_csv('S:\ML Course\Homework Week 1\datasets_master_housing.csv')
+
+# Get the number of columns
+num_columns = df.shape[1]
+print(f"The dataset has {num_columns} columns.")
+
+"""Answer: 10"""
+
+
+
+
+
+"""Question 3.
+Which columns in the dataset have missing values?"""
+
+import pandas as pd
+
+df = pd.read_csv('S:\ML Course\Homework Week 1\datasets_master_housing.csv')
+
+missing_values = df.isnull()
+missing_counts = missing_values.sum()
+
+print(missing_counts[missing_counts > 0].index.tolist())
+
+"""Answer: total_bedrooms"""
+
+
+
+
+
+"""Question 4.
+How many unique values does the ocean_proximity column have?"""
+
+import pandas as pd
+
+df = pd.read_csv('S:\ML Course\Homework Week 1\datasets_master_housing.csv')
+
+for column in df.columns:
+    print(df[column].value_counts())
+
+"""Answer: 5"""
+
+
+
+
+
+"""Question 5.
+What's the average value of the median_house_value for the houses located near the bay?"""
+
+import pandas as pd
+
+df = pd.read_csv('S:\ML Course\Homework Week 1\datasets_master_housing.csv')
+
+average_median_house_value_near_bay = df[df['ocean_proximity'] == 'NEAR BAY']['median_house_value'].mean()
+print(f"Average median_house_value for houses near the bay: ${average_median_house_value_near_bay:,.2f}")
+
+"""Answer: 259212"""
+
+
+
+
+
+"""Question 6.
+Calculate the average of total_bedrooms column in the dataset.
+Use the fillna method to fill the missing values in total_bedrooms with the mean value from the previous step.
+Now, calculate the average of total_bedrooms again.
+Has it changed?"""
+
+import pandas as pd
+
+df = pd.read_csv('S:\ML Course\Homework Week 1\datasets_master_housing.csv')
+
+# Step 1: Calculate the initial average of total_bedrooms
+initial_average_total_bedrooms = df['total_bedrooms'].mean()
+
+# Step 2: Fill missing values in total_bedrooms with the mean value
+df['total_bedrooms'].fillna(initial_average_total_bedrooms, inplace=True)
+
+# Step 3: Calculate the average of total_bedrooms again
+average_total_bedrooms_after_fillna = df['total_bedrooms'].mean()
+
+# Print the results
+print(f"Initial Average total_bedrooms: {initial_average_total_bedrooms:.2f}")
+print(f"Average total_bedrooms after fillna: {average_total_bedrooms_after_fillna:.2f}")
+
+"""Answer: no"""
+
+
+
+
+
+"""Question 7:
+Select all the options located on islands.
+Select only columns housing_median_age, total_rooms, total_bedrooms.
+Get the underlying NumPy array. Let's call it X.
+Compute matrix-matrix multiplication between the transpose of X and X. To get the transpose, use X.T. Let's call the result XTX.
+Compute the inverse of XTX.
+Create an array y with values [950, 1300, 800, 1000, 1300].
+Multiply the inverse of XTX with the transpose of X, and then multiply the result by y. Call the result w.
+What's the value of the last element of w?"""
+
+import pandas as pd
+import numpy as np
+
+df = pd.read_csv('S:\ML Course\Homework Week 1\datasets_master_housing.csv')
+
+# Step 1: Select options located on islands
+island_options = df[df['ocean_proximity'] == 'ISLAND']
+
+# Step 2: Select only specific columns
+selected_columns = island_options[['housing_median_age', 'total_rooms', 'total_bedrooms']]
+
+# Step 3: Get the underlying NumPy array X
+X = selected_columns.values
+
+# Step 4: Compute matrix-matrix multiplication between the transpose of X and X (XTX)
+XTX = X.T.dot(X)
+
+# Step 5: Compute the inverse of XTX
+XTX_inverse = np.linalg.inv(XTX)
+
+# Step 6: Create an array y
+y = np.array([950, 1300, 800, 1000, 1300])
+
+# Step 7: Multiply the inverse of XTX with the transpose of X, and then multiply by y to get w
+w = XTX_inverse.dot(X.T).dot(y)
+
+# Step 8: Get the last element of w
+last_element_of_w = w[-1]
+
+# Print the last element of w
+print("The value of the last element of w is:", last_element_of_w)
+
+"""Answer: 5.6992"""
